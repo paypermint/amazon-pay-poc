@@ -1,0 +1,21 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <title>Amazon Pay POC</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+  <h1>Get Refund Details</h1>
+  <form th:action="@{/getRefundDetails}" method="get">
+    <p>Amazon Refund ID: <input type="text" name="amazon_refund_id" th:value = "${amazon_refund_id}" required/></p>
+    
+    <p>Is Sandbox: <input type="text" name="is_sandbox" th:value="${is_sandbox}" /></p>
+    <p><input type="submit" value="Get Refund Details" /> <input type="reset" value="Reset" />
+      <p>
+  </form>
+  <p><a th:href="@{/}" class="btn btn-outline-brand btn-block">Home</a></p>
+</body>
+
+</html>

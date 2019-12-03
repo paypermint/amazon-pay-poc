@@ -1,0 +1,19 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <title>Amazon Pay POC</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+  <h1>Verify</h1>
+  <form th:action="@{/verify/sig}" method="get">
+    <p>response string: <input type="text" name = "response_string" placeholder ="please enter response string" required/></p>
+    <p><input type="submit" value="Verify" /> <input type="reset" value="Reset" />
+      <p>
+  </form>
+  <p><a th:href="@{/}" class="btn btn-outline-brand btn-block">Home</a></p>
+</body>
+
+</html>

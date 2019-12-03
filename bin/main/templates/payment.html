@@ -1,0 +1,18 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Amazon Pay POC</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+    <h1>Pay Using Amazon Pay</h1>
+    <form action="#" th:action="@{/pay}" th:object="${requests}"  method="post">
+    	<p>Seller Order ID: <input type="text" th:field="*{SellerOrderID}" placeholder="enter the seller order id" required/></p>
+        <p>Amount(in INR): <input type="text" th:field="*{OrderTotalAmount}" th:value="1.00" required/></p>
+        <p>Currency: <input type="text" th:field="*{OrderTotalCurrencyCode}" required/></p>
+        <p>Is Sandbox: <input type="text" th:field="*{IsSandbox}"/></p>
+        <p><input type="submit" value="Pay" /> <input type="reset" value="Reset" /><p>
+    </form>
+    <p><a th:href="@{/}" class="btn btn-outline-brand btn-block">Home</a></p>
+</body>
+</html>
