@@ -10,6 +10,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,6 +36,8 @@ public class RootController {
 	public static final String accessKey = "AKIAJAKG6LME27HVCD3A";
 	public static final String secretKey = "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";
 	public static final String returnUrl = "https://amazonpay.payscape.in/api/v1/payments/status";
+	
+	private static final Logger logger = LoggerFactory.getLogger(RootController.class);
 
 	public static Map<String, String> getQueryMap(String query) {
 		String[] params = query.split("&");
@@ -60,6 +64,7 @@ public class RootController {
 	@PostMapping("/pay")
 	public void pay(@ModelAttribute PaymentRequest req, Model m, HttpServletResponse httpServletResponse)
 			throws InvalidKeyException, NoSuchAlgorithmException, IOException {
+		logger.info("Inside pay");
 		try {
 			// Add the payment request values to HashMap
 			HashMap<String, String> parameters = new HashMap<String, String>();
@@ -95,21 +100,14 @@ public class RootController {
 	@GetMapping("/verify/sig")
 	public String verifySignature(@RequestParam(name = "response_string", required = true) String responseString,
 			Model m) {
-//		VerifySignature verifySignatureObj = new VerifySignature();
-		System.out.println(responseString);
+		logger.info("Inside verifySignature");
+		logger.info("verifySignature : responseString : " + responseString);
 		try {
 			String result = java.net.URLDecoder.decode(responseString, StandardCharsets.UTF_8.name());
-			System.out.println("******" + result);
+			logger.info("verifySignature : result = " + result);
 			VerifySignature verifySignatureObj = new VerifySignature(getQueryMap(result));
 
 			try {
-				/**
-				 * This can be placed in your java application for a method that is configured
-				 * to receive a "GET" request from Amazon Pay.
-				 **/
-				// Retrieve the payment response parameters from the request
-
-				// Add the response parameter values to a Hashmap
 				HashMap<String, String> paymentResponseParameters = new HashMap<>();
 				paymentResponseParameters.put(PWAINConstants.AMAZON_ORDER_ID, verifySignatureObj.getAmazonOrderId());
 				paymentResponseParameters.put(PWAINConstants.DESCRIPTION, verifySignatureObj.getDescription());
@@ -152,6 +150,7 @@ public class RootController {
 
 	@PostMapping("/refund")
 	public String refund(@ModelAttribute RefundRequest refundRequest, Model m) {
+		logger.info("Inside refund");
 		try {
 
 			Map<String, String> refundParams = new HashMap<>();
@@ -169,8 +168,8 @@ public class RootController {
 			RefundResponse response = backendSDK.refund(refundParams);
 			RefundDetails refundResponse = (RefundDetails) response.getDetails().get(0);
 
-			System.out.println("refundResponse:" + refundResponse);
-			m.addAttribute("refundResponse", refundResponse);
+			logger.info("refundResponse : " + refundResponse);
+			m.addAttribute("refund : refundResponse", refundResponse);
 		} catch (PWAINException e) {
 			e.printStackTrace();
 			m.addAttribute("refundResponse", e.getMessage());
@@ -190,7 +189,7 @@ public class RootController {
 	public String getrefundDetails(Model m,
 			@RequestParam(name = "is_sandbox", required = false, defaultValue = "true") String isSandBox,
 			@RequestParam(name = "amazon_refund_id", required = true) String amazonRefundId) {
-		System.out.println("inside getRefundDetails");
+		logger.info("Inside getRefundDetails");
 
 		try {
 
@@ -203,7 +202,7 @@ public class RootController {
 					.withAwsAccessKeyId(accessKey).withAwsSecretKeyId(secretKey).withSellerId(merchantID).build());
 			GetRefundDetailsResponseData response = backendSDK.getRefundDetails(refundDetailsParams);
 
-			System.out.println("refundResponse:" + response);
+			logger.info("refundResponse : " + response);
 			m.addAttribute("refundResponse", response);
 		} catch (PWAINException e) {
 			m.addAttribute("refundResponse", e.getMessage());
