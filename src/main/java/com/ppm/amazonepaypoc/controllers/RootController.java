@@ -35,7 +35,8 @@ public class RootController {
 	public static final String merchantID = "AZ4WQCLDT2DF0";
 	public static final String accessKey = "AKIAJAKG6LME27HVCD3A";
 	public static final String secretKey = "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";
-	public static final String returnUrl = "https://amazonpay.payscape.in/api/v1/payments/status";
+//	public static final String returnUrl = "https://amazonpay.payscape.in/api/v1/payments/status";
+	public static final String returnUrl = "http://13.233.179.216:8080/verify/sig";
 	
 	private static final Logger logger = LoggerFactory.getLogger(RootController.class);
 
