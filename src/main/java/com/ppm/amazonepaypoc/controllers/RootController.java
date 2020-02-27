@@ -8,6 +8,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
@@ -98,9 +99,14 @@ public class RootController {
 		return "verify_sig";
 	}
 
+
+//	public String verifySignature(@RequestParam(name = "response_string", required = true) String responseString,
+//			Model m) {
+	
 	@GetMapping("/verify/sig")
-	public String verifySignature(@RequestParam(name = "response_string", required = true) String responseString,
-			Model m) {
+    public String verifySig(HttpServletRequest request, Model m){
+        logger.info(request.getRequestURL().toString() + "?" + request.getQueryString());
+        String responseString = request.getQueryString();
 		logger.info("Inside verifySignature");
 		logger.info("verifySignature : responseString : " + responseString);
 		try {
@@ -126,6 +132,7 @@ public class RootController {
 						.withAwsAccessKeyId(accessKey).withAwsSecretKeyId(secretKey).withSellerId(merchantID).build());
 
 				backendSDK.verifySignature(paymentResponseParameters);
+				m.addAttribute("vars",paymentResponseParameters);
 				m.addAttribute("response",
 						"POC : Amazon Pay Integration: Transaction status: " + verifySignatureObj.getStatus());
 				// Signature verification successful please process the order
@@ -170,9 +177,9 @@ public class RootController {
 			RefundDetails refundResponse = (RefundDetails) response.getDetails().get(0);
 
 			logger.info("refundResponse : " + refundResponse);
-			m.addAttribute("refund : refundResponse", refundResponse);
+			m.addAttribute("refundResponse", refundResponse);
 		} catch (PWAINException e) {
-			e.printStackTrace();
+//			e.printStackTrace();
 			m.addAttribute("refundResponse", e.getMessage());
 		}
 		return "refund_resp";
